@@ -1,18 +1,25 @@
 // Import ApolloServer and gql
 const { ApolloServer, gql } = require('apollo-server-express');
 const { buildSubgraphSchema } = require('@apollo/subgraph');
+const bodyParser = require('body-parser');
 
 const express = require('express');
 const app = express();
 const cors = require('cors');
+
+
+
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+}));
+
 const mongoose = require('mongoose');
 require('dotenv').config({ path: '../.env' });
 console.log('MONGODB_URI:', process.env.MONGODB_URI);
 
 
-const port = 3001;
 
-app.use(cors());
 // Connect to MongoDB
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -42,21 +49,30 @@ const typeDefs = gql`
     }
 
     type Query {
-        getvitalSigns(userIdL: ID!): [VitalSign]
+        getVitalSigns(userId: ID): [VitalSign]
     }
 
     type Mutation {
-        addVitalSign(userId: ID!, heartRate: Int!, bloodPressure: Int!, temperature: Int!): VitalSign
-        updateVitalSign(id: ID!, heartRate: Int, bloodPressure: Int, temperature: Int): VitalSign
+        addVitalSign(userId: ID!, heartRate: Int!, bloodPressure: Int!, temperature: Float!): VitalSign
+        updateVitalSign(id: ID!, heartRate: Int, bloodPressure: Int, temperature: Float): VitalSign
     }
 `;
+
+// Middleware
+app.use(bodyParser.json());
 
 //define GraphQL resolvers
 const resolvers = {
     Query: {
-        getVitalSigns: async (_, { userId }) => {
+        getVitalSigns: async (_, { userId }, {user}) => {
+            if (!user && !userId) {
+                throw new Error("Unauthorized");
+            }
             try {
-                return await vitalSign.find({ userId });
+                const queryUserId = userId || user._id;
+                const vitalSigns = await vitalSign.find({ userId: queryUserId });
+                console.log('Backend vitalSigns:', vitalSigns);
+                return vitalSigns;
             } catch (error) {
                 throw new Error("Error fetching vital signs: " + error.message);
             }
@@ -65,12 +81,13 @@ const resolvers = {
     Mutation: {
         addVitalSign: async (_, { userId, heartRate, bloodPressure, temperature }) => {
             try {
-                const newVitalSign = new vitalSign({ userId, heartRate, bloodPressure, temperature });
-                return await newVitalSign.save();                
+              const newVitalSign = new vitalSign({ userId, heartRate, bloodPressure, temperature });
+              return await newVitalSign.save();
             } catch (error) {
-                throw new Error("Error adding vital sign: " + error.message);
+              throw new Error("Error adding vital sign: " + error.message);
             }
-        },
+          },
+          
         updateVitalSign: async (_, { id, heartRate, bloodPressure, temperature }) => {
             try {
                 const updatedVitalSign = await vitalSign.findByIdAndUpdate(
@@ -88,15 +105,29 @@ const resolvers = {
 };
 
 // Create a new ApolloServer instance, and pass in schema and resolvers
+// Apollo Server
 const server = new ApolloServer({
-    // Use buildFederatedSchema to combine your schema and resolvers
-    schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
+    typeDefs,
+    resolvers,
+    context: ({ req }) => {
+      const token = req.headers.authorization?.split(' ')[1];
+      let user = null;
+      if (token) {
+        try {
+          user = jwt.verify(token, process.env.JWT_SECRET); // Decode the token
+        } catch (err) {
+          console.error('Invalid token:', err.message);
+        }
+      }
+      return { user }; // Include the user in the context
+    },
   });
+  
   (async () => {
     await server.start();
-    server.applyMiddleware({ app });
+    server.applyMiddleware({ app, cors:false});
     const port =  3002 ;
     app.listen(port, () => {
-        console.log(`Authentication microservice ready at http://localhost:${port}${server.graphqlPath}`);
+        console.log(`Vital signs microservice ready at http://localhost:${port}${server.graphqlPath}`);
     });
 })();
