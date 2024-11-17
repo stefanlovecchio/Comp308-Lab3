@@ -6,20 +6,14 @@ export default defineConfig({
     plugins: [
         react(),
         federation({
-            name: 'authMicroFrontend',
-            filename: 'remoteEntry.js',
-            exposes: {
-                './AuthApp': './src/AuthApp.jsx', 
+            name: 'shellApp',
+            remotes: {
+                authMicroFrontend: 'http://localhost:5001/remoteEntry.js', 
             },
             shared: ['react', 'react-dom'], 
         }),
     ],
     server: {
-        port: 5001, 
-    },
-    build: {
-        target: 'esnext', 
-        minify: false, 
-        cssCodeSplit: false, 
+        port: 5173, 
     },
 });
