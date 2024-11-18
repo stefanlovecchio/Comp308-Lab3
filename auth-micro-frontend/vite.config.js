@@ -7,7 +7,7 @@ export default defineConfig({
         react(),
         federation({
             name: 'authMicroFrontend',
-            filename: 'remoteEntry.js',
+            filename: 'remoteEntry.js', 
             exposes: {
                 './AuthApp': './src/AuthApp.jsx', 
             },
@@ -16,10 +16,6 @@ export default defineConfig({
     ],
     server: {
         port: 5001, 
-    },
-    build: {
-        target: 'esnext', 
-        minify: false, 
-        cssCodeSplit: false, 
+        cors: true, 
     },
 });

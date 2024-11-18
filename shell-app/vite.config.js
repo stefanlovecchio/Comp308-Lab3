@@ -6,14 +6,19 @@ export default defineConfig({
     plugins: [
         react(),
         federation({
-            name: 'shellApp',
             remotes: {
                 authMicroFrontend: 'http://localhost:5001/remoteEntry.js', 
+                vitalSignsMicroFrontend: 'http://localhost:5002/remoteEntry.js', 
             },
             shared: ['react', 'react-dom'], 
         }),
     ],
     server: {
         port: 5173, 
+    },
+    build: {
+        target: 'esnext',
+        minify: false,
+        cssCodeSplit: false,
     },
 });

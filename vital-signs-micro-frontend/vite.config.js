@@ -1,7 +1,21 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import federation from '@originjs/vite-plugin-federation';
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-})
+    plugins: [
+        react(),
+        federation({
+            name: 'vitalSignsMicroFrontend',
+            filename: 'remoteEntry.js', 
+            exposes: {
+                './VitalSigns': './src/components/VitalSigns.jsx', 
+            },
+            shared: ['react', 'react-dom'], 
+        }),
+    ],
+    server: {
+        port: 5002, 
+        cors: true, 
+    },
+});
