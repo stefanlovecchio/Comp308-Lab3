@@ -8,17 +8,17 @@ const app = express();
 const cors = require('cors');
 
 
-
-app.use(cors({
-    origin: 'http://localhost:5173',
-    credentials: true,
-}));
+app.use(
+    cors({
+        origin: ['http://localhost:5002', 'http://localhost:5173'], 
+        methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+        credentials: true, 
+    })
+);
 
 const mongoose = require('mongoose');
 require('dotenv').config({ path: '../.env' });
 console.log('MONGODB_URI:', process.env.MONGODB_URI);
-
-
 
 // Connect to MongoDB
 
@@ -114,19 +114,19 @@ const server = new ApolloServer({
       let user = null;
       if (token) {
         try {
-          user = jwt.verify(token, process.env.JWT_SECRET); // Decode the token
+          user = jwt.verify(token, process.env.JWT_SECRET); 
         } catch (err) {
           console.error('Invalid token:', err.message);
         }
       }
-      return { user }; // Include the user in the context
+      return { user }; 
     },
   });
   
   (async () => {
     await server.start();
     server.applyMiddleware({ app, cors:false});
-    const port =  3002 ;
+    const port =  4000 ;
     app.listen(port, () => {
         console.log(`Vital signs microservice ready at http://localhost:${port}${server.graphqlPath}`);
     });

@@ -7,15 +7,17 @@ export default defineConfig({
         react(),
         federation({
             name: 'vitalSignsMicroFrontend',
-            filename: 'remoteEntry.js', 
+            filename: 'remoteEntry.js',
             exposes: {
                 './VitalSigns': './src/components/VitalSigns.jsx', 
             },
-            shared:  ['react', 'react-dom', '@apollo/client', 'graphql'], 
+            shared: ['react', 'react-dom', '@apollo/client', 'graphql'],
         }),
     ],
     server: {
-        port: 5002, 
-        cors: true, 
+        port: 5002,
+        cors: {
+            origin: '*',
+        },
     },
 });

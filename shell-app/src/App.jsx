@@ -1,12 +1,12 @@
 import React, { useEffect, Suspense } from 'react';
 
-const AuthMicroFrontend = React.lazy(() => import('authMicroFrontend/AuthApp'));
+const AuthMicroFrontend = React.lazy(() => import('authMicroFrontend/App'));
 const VitalSignsMicroFrontend = React.lazy(() => import('vitalSignsMicroFrontend/VitalSigns'));
 
 const App = () => {
     useEffect(() => {
         console.log('Attempting to load Auth Micro-Frontend...');
-        import('authMicroFrontend/AuthApp')
+        import('authMicroFrontend/App') 
             .then((module) => console.log('Auth Micro-Frontend Loaded:', module))
             .catch((err) => console.error('Failed to load Auth Micro-Frontend:', err));
 
