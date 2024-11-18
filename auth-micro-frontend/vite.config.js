@@ -9,14 +9,24 @@ export default defineConfig({
             name: 'authMicroFrontend', 
             filename: 'remoteEntry.js', 
             exposes: {
-                './App': './src/App.jsx', 
+
+                './AuthApp': './main.jsx', 
             },
-            shared: [
-                'react',
-                'react-dom',
-                '@apollo/client',
+            shared: {
+            react: {
+            singleton: true, // Use only one version
+            requiredVersion: '^18.0.0',
+            },
+            'react-dom': {
+            singleton: true,
+            requiredVersion: '^18.0.0',
+            },
+              '@apollo/client',
                 'graphql',
-            ], 
+        },
+
+            },
+            
         }),
     ],
     server: {
