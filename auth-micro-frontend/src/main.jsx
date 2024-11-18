@@ -4,6 +4,8 @@ import App from './App';
 import { ApolloProvider } from '@apollo/client';
 import client from './ApolloClient';
 
+
+
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
         <ApolloProvider client={client}>

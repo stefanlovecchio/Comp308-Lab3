@@ -11,6 +11,7 @@ export default defineConfig({
             exposes: {
                 './VitalSigns': './main.jsx', 
             },
+
             shared: {
     react: {
       singleton: true, // Use only one version
@@ -21,6 +22,7 @@ export default defineConfig({
       requiredVersion: '^18.0.0',
     },
   },
+
         }),
     ],
     server: {
