@@ -9,9 +9,18 @@ export default defineConfig({
             name: 'vitalSignsMicroFrontend',
             filename: 'remoteEntry.js', 
             exposes: {
-                './VitalSigns': './src/components/VitalSigns.jsx', 
+                './VitalSigns': './main.jsx', 
             },
-            shared: ['react', 'react-dom'], 
+            shared: {
+    react: {
+      singleton: true, // Use only one version
+      requiredVersion: '^18.0.0',
+    },
+    'react-dom': {
+      singleton: true,
+      requiredVersion: '^18.0.0',
+    },
+  },
         }),
     ],
     server: {

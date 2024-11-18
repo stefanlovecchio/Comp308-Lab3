@@ -10,7 +10,16 @@ export default defineConfig({
                 authMicroFrontend: 'http://localhost:5001/remoteEntry.js', 
                 vitalSignsMicroFrontend: 'http://localhost:5002/remoteEntry.js', 
             },
-            shared: ['react', 'react-dom'], 
+            shared: {
+    react: {
+      singleton: true, // Use only one version
+      requiredVersion: '^18.0.0',
+    },
+    'react-dom': {
+      singleton: true,
+      requiredVersion: '^18.0.0',
+    },
+  },
         }),
     ],
     server: {
