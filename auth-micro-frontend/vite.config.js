@@ -6,16 +6,28 @@ export default defineConfig({
     plugins: [
         react(),
         federation({
-            name: 'authMicroFrontend',
+            name: 'authMicroFrontend', 
             filename: 'remoteEntry.js', 
             exposes: {
-                './AuthApp': './src/AuthApp.jsx', 
+                './App': './src/App.jsx', 
             },
-            shared: ['react', 'react-dom'], 
+            shared: [
+                'react',
+                'react-dom',
+                '@apollo/client',
+                'graphql',
+            ], 
         }),
     ],
     server: {
         port: 5001, 
-        cors: true, 
+        cors: {
+            origin: '*', 
+            methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+        },
+    },
+    build: {
+        target: 'esnext', 
+        minify: false, 
     },
 });

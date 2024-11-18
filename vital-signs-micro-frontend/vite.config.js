@@ -11,7 +11,7 @@ export default defineConfig({
             exposes: {
                 './VitalSigns': './src/components/VitalSigns.jsx', 
             },
-            shared: ['react', 'react-dom'], 
+            shared:  ['react', 'react-dom', '@apollo/client', 'graphql'], 
         }),
     ],
     server: {
