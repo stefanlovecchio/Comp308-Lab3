@@ -9,9 +9,8 @@ export default defineConfig({
             name: 'vitalSignsMicroFrontend',
             filename: 'remoteEntry.js',
             exposes: {
-                './VitalSigns': './src/components/VitalSigns.jsx', 
-            },
-            shared: ['react', 'react-dom', '@apollo/client', 'graphql'],
+                './VitalSigns': './main.jsx', 
+            }, shared: ['react', 'react-dom', '@apollo/client', 'graphql'],
         }),
     ],
     server: {

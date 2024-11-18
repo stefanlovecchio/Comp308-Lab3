@@ -10,8 +10,25 @@ export default defineConfig({
                 authMicroFrontend: 'authMicroFrontend@http://localhost:5001/remoteEntry.js',
                 vitalSignsMicroFrontend: 'vitalSignsMicroFrontend@http://localhost:5002/remoteEntry.js',
             },
-            shared: ['react', 'react-dom', '@apollo/client', 'graphql'],
-        }),
+shared: {
+    react: {
+      singleton: true,
+      requiredVersion: '^18.0.0',
+    },
+    'react-dom': {
+      singleton: true,
+      requiredVersion: '^18.0.0',
+    },
+    '@apollo/client': {
+      singleton: true,
+      requiredVersion: '^3.0.0', // Adjust to match your version
+    },
+    graphql: {
+      singleton: true,
+      requiredVersion: '^16.0.0', // Adjust to match your version
+    },
+  },
+}),
     ],
     server: {
         port: 5173, 

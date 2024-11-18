@@ -12,6 +12,7 @@ export default defineConfig({
                 './App': './src/App.jsx',
             },
             shared: ['react', 'react-dom', '@apollo/client', 'graphql'],
+
         }),
     ],
     server: {
